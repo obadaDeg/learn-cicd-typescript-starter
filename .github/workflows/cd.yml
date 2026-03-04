@@ -22,5 +22,13 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Deploy to production
-        run: echo "Deploying to production..." # replace with actual deployment command
+      - name: Authenticate with GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Set up gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Build and push Docker image
+        run: gcloud builds submit --tag us-central1-docker.pkg.dev/notely-489220/notely-ar-repo/notely:latest .
